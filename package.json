@@ -2,5 +2,8 @@
   "name": "@parcel/parcel-scripts",
   "version": "1.0.0",
   "bin": "parcel-script",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
 }
