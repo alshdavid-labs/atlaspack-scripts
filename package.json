@@ -1,9 +1,16 @@
 {
   "name": "@parcel/parcel-scripts",
   "version": "1.0.0",
-  "bin": "parcel-script",
+  "bin": {
+    "parcel-script": "./runner/main.mjs"
+  },
+  "type": "module",
   "license": "MIT",
   "dependencies": {
-    "lodash": "^4.17.21"
+    "@alshdavid/kit": "^0.8.6",
+    "@types/node": "^20.3.3",
+    "glob": "^10.3.1",
+    "lodash": "^4.17.21",
+    "minimatch": "^9.0.2"
   }
 }
