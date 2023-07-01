@@ -2,7 +2,7 @@ import * as child_process from 'node:child_process'
 import { Paths } from './paths.mjs'
 
 export function $$(options) {
-  return (command) => $(command, options)
+  return (command, options2) => $(command, {...options, ...options2})
 }
 
 export function $(command, options) {

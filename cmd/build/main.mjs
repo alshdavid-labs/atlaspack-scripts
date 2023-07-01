@@ -23,8 +23,12 @@ export async function main(args) {
     'npx parcel build', 
     'packages/core/{fs,codeframe,package-manager,utils}',
     'packages/reporters/{cli,dev-server}',
-    'packages/utils/{parcel-lsp,parcel-lsp-protocol}'
+    'packages/utils/{parcel-lsp,parcel-lsp-protocol}',
   ])
 
   $('npx gulp')
+
+  $('npx lerna run build-ts')
+
+  $('npx lerna run check-ts')
 }
