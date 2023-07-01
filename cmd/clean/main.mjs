@@ -9,7 +9,7 @@ import * as minimatch from 'minimatch'
 /** @returns {Promise<void>} */
 export async function main(
   /** @type {string[]} */ args,
-  /** @type {?CleanOptions} */ { silent } = { silent: false },
+  /** @type {CleanOptions} */ { silent } = { silent: false },
 ) {
   /** @type {Set<string>} */
   const toDelete = new Set()

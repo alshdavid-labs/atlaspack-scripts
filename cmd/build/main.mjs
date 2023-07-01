@@ -1,20 +1,19 @@
 import { $$ } from '../../platform/exec.mjs'
 import { main as clean } from '../clean/main.mjs'
 
-const Env = {
-  NODE_ENV: 'production' ,
-  PARCEL_BUILD_ENV: 'production',
-  PARCEL_SELF_BUILD: true,
-  PARCEL_WORKER_BACKEND: 'process',
-}
-
 const $ = $$({ 
   env: { 
-    ...process.env, ...Env 
+    NODE_ENV: 'production' ,
+    PARCEL_BUILD_ENV: 'production',
+    PARCEL_SELF_BUILD: 'true',
+    PARCEL_WORKER_BACKEND: 'process',
+    ...process.env, 
   }
 })
 
-export async function main(args) {
+export async function main(
+  /** @type {string[]} */ args,
+) {
   $('node scripts/build-native.js')
   
   await clean(['lib'], { silent: true })
