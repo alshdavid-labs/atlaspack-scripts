@@ -38,6 +38,8 @@ export async function main(
   for (const absoluteFilepath of toDelete.values()) {
     const filepath = absoluteFilepath.replace(Paths.ParcelRoot + '/', '')
     if (!silent) console.log('RM:', filepath)
-    fs.rmSync(absoluteFilepath, { recursive: true })
+    if (fs.existsSync(absoluteFilepath)) {
+      fs.rmSync(absoluteFilepath, { recursive: true })
+    }
   }
 }
