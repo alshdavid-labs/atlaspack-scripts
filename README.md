@@ -3,33 +3,23 @@
 ## Installation
 
 ```bash
-pnpm i
-sudo ln -s $PWD/parcel-script /usr/local/bin/parcel-script
-sudo ln -s $PWD/parcel-script /usr/local/bin/psct
+wget --no-check-certificate https://github.com/alshdavid-labs/parcel-scripts/archive/refs/heads/main.zip
+# Or
+curl -LJO https://github.com/alshdavid-labs/parcel-scripts/archive/refs/heads/main.zip 
+
+mv parcel-scripts-main $HOME/.local/parcel-scripts
+cd $HOME/.local/parcel-scripts
+npm install
+
+export PARCEL_SRC_PATH="$HOME/Development/parcel-bundler/parcel
+alias parcel_scripts="node $HOME/.local/parcel-scripts/runner/main.mjs"
 ```
 
-## Autocomplete
-
-For autocomplete support on zsh run this. You may add it to your `~/.zshrc`
+Alternatively, you can use a bash funciton
 
 ```bash
-eval "$(parcel-script autocomplete)"
-```
-
-## Usage
-
-```bash
-parcel-script {script-name}
-psct {script-name}
-
-# Example
-parcel-script clean --all --dry
-psct clean --all --dry
-```
-
-## Parcel DIR
-
-```bash
-export PARCEL_REPO_PATH=~/Development/parcel-bundler/parcel
-parcel-script clean
+function parcel_scripts() {
+  PARCEL_SRC_PATH=/Volumes/Data/Development/parcel-bundler/parcel \
+  node /Volumes/Data/Development/alshdavid/parcel-scripts/runner/main.mjs $@
+}
 ```
