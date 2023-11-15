@@ -19,7 +19,7 @@ Alternatively, you can use a bash funciton
 
 ```bash
 function parcel_scripts() {
-  PARCEL_SRC_PATH=/Volumes/Data/Development/parcel-bundler/parcel \
-  node /Volumes/Data/Development/alshdavid/parcel-scripts/runner/main.mjs $@
+  PARCEL_SRC_PATH=/home/dalsh/Developement/parcel-bundler/parcel \
+  node /home/dalsh/Developement/alshdavid/parcel-scripts/runner/main.mjs $@
 }
 ```
