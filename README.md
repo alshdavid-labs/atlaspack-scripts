@@ -11,15 +11,6 @@ mv parcel-scripts-main $HOME/.local/parcel-scripts
 cd $HOME/.local/parcel-scripts
 npm install
 
-export PARCEL_SRC_PATH="$HOME/Development/parcel-bundler/parcel
-alias parcel_scripts="node $HOME/.local/parcel-scripts/runner/main.mjs"
-```
-
-Alternatively, you can use a bash funciton
-
-```bash
-function parcel_scripts() {
-  PARCEL_SRC_PATH=/home/dalsh/Developement/parcel-bundler/parcel \
-  node /home/dalsh/Developement/alshdavid/parcel-scripts/runner/main.mjs $@
-}
+export PARCEL_SRC_PATH="$HOME/Development/parcel-bundler/parcel"
+export PATH="$HOME/.local/parcel-scripts/bin:$PATH"
 ```
