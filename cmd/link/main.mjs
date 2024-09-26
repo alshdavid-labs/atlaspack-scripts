@@ -1,8 +1,9 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
+import * as url from "node:url";
 import * as glob from "glob";
-import { dirname, exists, json, ln, lnInner, ls, mkdir, mv, rm } from "../../platform/fs.mjs";
 
+const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 
 /** @returns {Promise<void>} */
 export async function main(/** @type {string[]} */ args) {
@@ -19,65 +20,31 @@ export async function main(/** @type {string[]} */ args) {
   }
 
   /** @type {Record<string, string>} */
-  const parcelPackageIndex = {}
-  /** @type {Record<string, string>} */
-  const targetPackageIndex = {}
+  const packageIndex = {}
 
   const packageJsons = glob.sync('packages/*/*/package.json', { cwd: ATLASPACK_SRC_PATH })
   for (const packageJsonPath of packageJsons) {
-    const { name } = json(`${ATLASPACK_SRC_PATH}/${packageJsonPath}`)
-    parcelPackageIndex[name] = dirname(`${ATLASPACK_SRC_PATH}/${packageJsonPath}`)
+    const fullPath = path.join(ATLASPACK_SRC_PATH, packageJsonPath)
+    const { name } = JSON.parse(fs.readFileSync(fullPath, 'utf8'))
+    packageIndex[name] = path.dirname(fullPath)
   }
 
-  for (const dirName of ls(`${TARGET_PATH}/node_modules`)) {
-    if (dirName === 'parcel') {
-      targetPackageIndex[dirName] = `${TARGET_PATH}/node_modules/${dirName}`
-      continue
-    }
-    if (dirName.startsWith('@parcel')) {
-      for (const dir of fs.readdirSync(path.join(TARGET_PATH, "node_modules", '@parcel'))) {
-        targetPackageIndex[`@parcel/${dir}`] = `${TARGET_PATH}/node_modules/@parcel/${dir}`
-      }
-    }
+  fs.rmSync(path.join(TARGET_PATH, 'node_modules', 'atlaspack'), { force: true, recursive: true  })
+  fs.rmSync(path.join(TARGET_PATH, 'node_modules', '@atlaspack'), { force: true, recursive: true  })
+
+  fs.mkdirSync(path.join(TARGET_PATH, 'node_modules', '@atlaspack'), { recursive: true })
+
+  for (const [packageName, packagePath] of Object.entries(packageIndex)) {
+    const dest = path.join(TARGET_PATH, 'node_modules', packageName)
+    console.log(`Linking:\n\t${packagePath}\n\t${path.join(TARGET_PATH, 'node_modules', packageName)}\n`)
+    if (fs.existsSync(dest)) fs.rmSync(dest, { recursive: true, force: true })
+    fs.symlinkSync(packagePath, dest)
   }
 
-  console.log(parcelPackageIndex)
-
-  // if (!exists(`${TARGET_PATH}/node_modules/@parcel__link`)) {
-  //   mkdir(`${TARGET_PATH}/node_modules/@parcel__link`)
-  //   for (const [pkgName, pkgPath] of Object.entries(targetPackageIndex)) {
-  //     if (!(pkgName in parcelPackageIndex)) {
-  //       continue
-  //     }
-  //     mv(
-  //       pkgPath, 
-  //       `${TARGET_PATH}/node_modules/@parcel__link/${pkgName}`,
-  //     )
-  //   }
-  // }
-
-  // for (const [pkgName, pkgPath] of Object.entries(targetPackageIndex)) {
-  //   if (!(pkgName in parcelPackageIndex)) {
-  //     continue
-  //   }
-  //   if (exists(pkgPath)) {
-  //     rm(pkgPath)
-  //   }
-  //   lnInner(
-  //     parcelPackageIndex[pkgName],
-  //     pkgPath,
-  //   )
-  //   if (exists(`${pkgPath}/node_modules`)) {
-  //     rm(`${pkgPath}/node_modules`)
-  //   }
-  //   if (exists(`${TARGET_PATH}/node_modules/@parcel__link/${pkgName}/node_modules`)) {
-  //     ln(
-  //       `${TARGET_PATH}/node_modules/@parcel__link/${pkgName}/node_modules`,
-  //       `${pkgPath}/node_modules`
-  //     )
-  //   }
-  // }
-
-  // rm(`${TARGET_PATH}/node_modules/.bin/parcel`)
-  // ln(`${TARGET_PATH}/node_modules/parcel/src/bin.js`, `${TARGET_PATH}/node_modules/.bin/parcel`)
+  const binDest = path.join(TARGET_PATH, 'node_modules', '.bin', 'atlaspack')
+  const binSrc = path.join(__dirname, 'custom', 'atlaspack.cjs')
+  
+  fs.rmSync(binDest, { recursive: true, force: true })
+  fs.mkdirSync(path.join(TARGET_PATH, 'node_modules', '.bin'), { recursive: true })
+  fs.cpSync(binSrc, binDest)
 }
