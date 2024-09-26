@@ -1,16 +1,12 @@
-# Some convience scripts to use when working on Parcel
+# Some convince scripts to use when working on Atlaspack
 
 ## Installation
 
 ```bash
-wget --no-check-certificate https://github.com/alshdavid-labs/parcel-scripts/archive/refs/heads/main.zip
-# Or
-curl -LJO https://github.com/alshdavid-labs/parcel-scripts/archive/refs/heads/main.zip 
-
-mv parcel-scripts-main $HOME/.local/parcel-scripts
-cd $HOME/.local/parcel-scripts
+git clone # this repo
+cd atlaspack-scripts
 npm install
 
-export PARCEL_SRC_PATH="$HOME/Development/parcel-bundler/parcel"
+export ATLASPACK_SRC_PATH="$HOME/Development/atlassian-labs/atlaspack"
 export PATH="$HOME/.local/parcel-scripts/bin:$PATH"
 ```

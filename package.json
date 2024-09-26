@@ -7,10 +7,7 @@
   "type": "module",
   "license": "MIT",
   "dependencies": {
-    "@alshdavid/kit": "^0.8.6",
-    "@types/node": "^20.3.3",
-    "glob": "^10.3.10",
-    "lodash": "^4.17.21",
-    "minimatch": "^9.0.2"
+    "@types/node": "^20",
+    "glob": "*"
   }
 }

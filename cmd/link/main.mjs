@@ -3,17 +3,18 @@ import * as path from "node:path";
 import * as glob from "glob";
 import { dirname, exists, json, ln, lnInner, ls, mkdir, mv, rm } from "../../platform/fs.mjs";
 
+
 /** @returns {Promise<void>} */
 export async function main(/** @type {string[]} */ args) {
   const TARGET_PATH = args?.[0] && path.isAbsolute(args?.[0]) 
     ? args[0] 
     : path.join(process.cwd(), (args?.[0] || '.'))
 
-  const { PARCEL_SRC_PATH } = process.env;
+  const { ATLASPACK_SRC_PATH } = process.env;
   if (typeof TARGET_PATH !== "string") {
     process.exit(1);
   }
-  if (typeof PARCEL_SRC_PATH !== "string") {
+  if (typeof ATLASPACK_SRC_PATH !== "string") {
     process.exit(1);
   }
 
@@ -22,10 +23,10 @@ export async function main(/** @type {string[]} */ args) {
   /** @type {Record<string, string>} */
   const targetPackageIndex = {}
 
-  const packageJsons = glob.sync('packages/*/*/package.json', { cwd: PARCEL_SRC_PATH })
+  const packageJsons = glob.sync('packages/*/*/package.json', { cwd: ATLASPACK_SRC_PATH })
   for (const packageJsonPath of packageJsons) {
-    const { name } = json(`${PARCEL_SRC_PATH}/${packageJsonPath}`)
-    parcelPackageIndex[name] = dirname(`${PARCEL_SRC_PATH}/${packageJsonPath}`)
+    const { name } = json(`${ATLASPACK_SRC_PATH}/${packageJsonPath}`)
+    parcelPackageIndex[name] = dirname(`${ATLASPACK_SRC_PATH}/${packageJsonPath}`)
   }
 
   for (const dirName of ls(`${TARGET_PATH}/node_modules`)) {
@@ -40,41 +41,43 @@ export async function main(/** @type {string[]} */ args) {
     }
   }
 
-  if (!exists(`${TARGET_PATH}/node_modules/@parcel__link`)) {
-    mkdir(`${TARGET_PATH}/node_modules/@parcel__link`)
-    for (const [pkgName, pkgPath] of Object.entries(targetPackageIndex)) {
-      if (!(pkgName in parcelPackageIndex)) {
-        continue
-      }
-      mv(
-        pkgPath, 
-        `${TARGET_PATH}/node_modules/@parcel__link/${pkgName}`,
-      )
-    }
-  }
+  console.log(parcelPackageIndex)
 
-  for (const [pkgName, pkgPath] of Object.entries(targetPackageIndex)) {
-    if (!(pkgName in parcelPackageIndex)) {
-      continue
-    }
-    if (exists(pkgPath)) {
-      rm(pkgPath)
-    }
-    lnInner(
-      parcelPackageIndex[pkgName],
-      pkgPath,
-    )
-    if (exists(`${pkgPath}/node_modules`)) {
-      rm(`${pkgPath}/node_modules`)
-    }
-    if (exists(`${TARGET_PATH}/node_modules/@parcel__link/${pkgName}/node_modules`)) {
-      ln(
-        `${TARGET_PATH}/node_modules/@parcel__link/${pkgName}/node_modules`,
-        `${pkgPath}/node_modules`
-      )
-    }
-  }
+  // if (!exists(`${TARGET_PATH}/node_modules/@parcel__link`)) {
+  //   mkdir(`${TARGET_PATH}/node_modules/@parcel__link`)
+  //   for (const [pkgName, pkgPath] of Object.entries(targetPackageIndex)) {
+  //     if (!(pkgName in parcelPackageIndex)) {
+  //       continue
+  //     }
+  //     mv(
+  //       pkgPath, 
+  //       `${TARGET_PATH}/node_modules/@parcel__link/${pkgName}`,
+  //     )
+  //   }
+  // }
 
-  rm(`${TARGET_PATH}/node_modules/.bin/parcel`)
-  ln(`${TARGET_PATH}/node_modules/parcel/src/bin.js`, `${TARGET_PATH}/node_modules/.bin/parcel`)
+  // for (const [pkgName, pkgPath] of Object.entries(targetPackageIndex)) {
+  //   if (!(pkgName in parcelPackageIndex)) {
+  //     continue
+  //   }
+  //   if (exists(pkgPath)) {
+  //     rm(pkgPath)
+  //   }
+  //   lnInner(
+  //     parcelPackageIndex[pkgName],
+  //     pkgPath,
+  //   )
+  //   if (exists(`${pkgPath}/node_modules`)) {
+  //     rm(`${pkgPath}/node_modules`)
+  //   }
+  //   if (exists(`${TARGET_PATH}/node_modules/@parcel__link/${pkgName}/node_modules`)) {
+  //     ln(
+  //       `${TARGET_PATH}/node_modules/@parcel__link/${pkgName}/node_modules`,
+  //       `${pkgPath}/node_modules`
+  //     )
+  //   }
+  // }
+
+  // rm(`${TARGET_PATH}/node_modules/.bin/parcel`)
+  // ln(`${TARGET_PATH}/node_modules/parcel/src/bin.js`, `${TARGET_PATH}/node_modules/.bin/parcel`)
 }
