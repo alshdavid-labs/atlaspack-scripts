@@ -14,5 +14,8 @@ if (ATLASPACK_DEV) {
   console.log('===========================')
   require(path.join(packagePath, 'src', 'bin.js'))
 } else {
+  console.log('===========================')
+  console.log('====  ATLASPACK LOCAL  ====')
+  console.log('===========================')
   require(path.join(packagePath, 'lib', 'bin.js'))
 }
