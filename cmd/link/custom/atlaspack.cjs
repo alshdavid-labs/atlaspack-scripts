@@ -9,6 +9,9 @@ const packagePath = path.dirname(packageJsonPath)
 
 if (ATLASPACK_DEV) {
   require('@atlaspack/babel-register/index.js')
+  console.log('===========================')
+  console.log('==== ATLASPACK SOURCES ====')
+  console.log('===========================')
   require(path.join(packagePath, 'src', 'bin.js'))
 } else {
   require(path.join(packagePath, 'lib', 'bin.js'))
