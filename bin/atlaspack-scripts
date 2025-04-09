@@ -1,6 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e 
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-node "$SCRIPT_DIR/../runner/main.mjs" $@
+ARGS="$@"
+if [ "$ARGS" = "" ]; then
+    node "$SCRIPT_DIR/../runner/main.mjs" help
+else
+    node "$SCRIPT_DIR/../runner/main.mjs" $@
+fi
