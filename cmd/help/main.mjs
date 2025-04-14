@@ -3,5 +3,6 @@ export async function main(
 ) {
   console.log('Commands:')
   console.log(' link')
+  console.log(' upgrade [./package.json]')
   console.log(' help')
 }

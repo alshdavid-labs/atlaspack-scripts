@@ -8,6 +8,7 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 
 async function main() {
   const [,, command, ...args] = process.argv
+  console.log(command, __dirname)
   const targetFile = path.join(__dirname, '..', 'cmd', command, 'main.mjs')
   if (!fs.existsSync(targetFile)) {
     console.error('no script -', command)
