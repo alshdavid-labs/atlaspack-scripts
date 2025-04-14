@@ -5,4 +5,5 @@ export async function main(
   console.log(' link')
   console.log(' upgrade [./package.json]')
   console.log(' help')
+  console.log(' find')
 }
